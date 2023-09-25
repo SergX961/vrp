@@ -25,6 +25,7 @@ setup(
             'first_task = vrp_comp.first_task:main',
             'second_task = vrp_comp.second_task:main',
             'third_task = vrp_comp.third_task:main',
+            'HT_sensor = vrp_comp.HT_sensor:main',
         ],
     },
 )

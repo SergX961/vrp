@@ -27,6 +27,7 @@ setup(
                     'motors = booblik.motors:main',
                     'gpsimu = booblik.gpsimu:main',
                     'ping = booblik.ping:main',
+                    'rs485node = booblik.rs485:main',
                 ],
     },
 )
