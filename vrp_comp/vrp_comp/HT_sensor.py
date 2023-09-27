@@ -8,7 +8,7 @@ import struct
 
 
 class HTSensor(Node):
-    sensor_idx = 0x1
+    sensor_idx = 0x2
     rqstHum = [sensor_idx, 0x03, 0x00, 0x00, 0x00, 0x02, 0xFF, 0xFF]
 
 
@@ -72,9 +72,8 @@ class HTSensor(Node):
         print(self.parce_HT(data))
 
 
-    def get_rqst_HT_data_msg (self, address):
+    def get_rqst_HT_data_msg (self):
         l = self.rqstHum
-        l[0] = address
         crc = libscrc.modbus(bytes(l[0:6]))
         crcLow = crc & 0xFF
         crcHigh = crc >> 8
@@ -85,7 +84,7 @@ class HTSensor(Node):
 
     def request_thread (self):
         while True:
-            request_message = self.get_rqst_HT_data_msg(1)
+            request_message = self.get_rqst_HT_data_msg()
             self.send_message(request_message)
             time.sleep(1)
 

@@ -32,9 +32,12 @@ class ETHRS485(Node):
 
     def request_callback(self, data:UInt8MultiArray):
         try:
+            print("Request:", list(data.data))
             self.socket_.sendall(data.data)
-            data = self.socket_.recv(1024)
-            self.tx_answer(list(data))
+            answer = self.socket_.recv(1024)
+            self.tx_answer(list(answer))
+
+            print("Answer: ", list(answer))
         except Exception as e:
             print("Request error {e}")
             print(e)
