@@ -27,6 +27,7 @@ setup(
             'third_task = vrp_comp.third_task:main',
             'HT_sensor = vrp_comp.HT_sensor:main',
             'wind_sensor = vrp_comp.wind_sensor:main',
+            'ec_tds_sensor = vrp_comp.ec_tds_sensor:main',
         ],
     },
 )
