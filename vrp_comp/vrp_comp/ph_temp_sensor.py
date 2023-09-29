@@ -7,13 +7,13 @@ import libscrc
 import struct
 
 
-class ECTDSSensor(Node):
-    sensor_idx = 0x4
+class PHTempSensor(Node):
+    sensor_idx = 0x5
     rqst = [sensor_idx, 0x03, 0x0, 0x0, 0x0, 0x2, 0xFF, 0xFF]
 
 
     def __init__(self):
-        super().__init__('ec_tds_sensor')
+        super().__init__('ph_temp_sensor')
         self.tx_ = self.create_publisher(
             UInt8MultiArray,
             '/booblik/rs485Rx',
@@ -105,7 +105,7 @@ class ECTDSSensor(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    ec_tds_sensor = ECTDSSensor()
+    ec_tds_sensor = PHTempSensor()
     rclpy.spin(ec_tds_sensor)
     rclpy.shutdown()
 
