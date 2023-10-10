@@ -29,6 +29,7 @@ setup(
             'wind_sensor = vrp_comp.wind_sensor:main',
             'ec_tds_sensor = vrp_comp.ec_tds_sensor:main',
             'ph_temp_sensor = vrp_comp.ph_temp_sensor:main',
+            'disolved_oxygen_sensor = vrp_comp.disolved_oxygen_sensor:main',
         ],
     },
 )
