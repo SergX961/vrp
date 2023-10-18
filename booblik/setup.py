@@ -28,6 +28,11 @@ setup(
                     'gpsimu = booblik.gpsimu:main',
                     'ping = booblik.ping:main',
                     'rs485node = booblik.rs485:main',
+                    'HT_sensor = vrp_comp.HT_sensor:main',
+                    'wind_sensor = vrp_comp.wind_sensor:main',
+                    'ec_tds_sensor = vrp_comp.ec_tds_sensor:main',
+                    'ph_temp_sensor = vrp_comp.ph_temp_sensor:main',
+                    'disolved_oxygen_sensor = vrp_comp.disolved_oxygen_sensor:main',
                 ],
     },
 )

@@ -25,11 +25,6 @@ setup(
             'first_task = vrp_comp.first_task:main',
             'second_task = vrp_comp.second_task:main',
             'third_task = vrp_comp.third_task:main',
-            'HT_sensor = vrp_comp.HT_sensor:main',
-            'wind_sensor = vrp_comp.wind_sensor:main',
-            'ec_tds_sensor = vrp_comp.ec_tds_sensor:main',
-            'ph_temp_sensor = vrp_comp.ph_temp_sensor:main',
-            'disolved_oxygen_sensor = vrp_comp.disolved_oxygen_sensor:main',
         ],
     },
 )
