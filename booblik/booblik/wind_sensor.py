@@ -9,7 +9,7 @@ import struct
 
 class WindSensor(Node):
     sensor_idx = 0x3
-    rqst_wind = [sensor_idx, 0x03, 0x00, 0x00, 0x00, 0x09, 0xFF, 0xFF]
+    rqst_msg = [sensor_idx, 0x03, 0x00, 0x00, 0x00, 0x09, 0xFF, 0xFF]
 
 
     def __init__(self):
@@ -25,7 +25,6 @@ class WindSensor(Node):
             self.recieve_callback,
             10
         )
-
         self.sendThread = Thread(
             target=self.request_thread, daemon=True).start()
 
@@ -43,6 +42,7 @@ class WindSensor(Node):
         else:
             return False
 
+
     def check_idx (self, data):
         if data[0] == self.sensor_idx:
             return True
@@ -50,31 +50,32 @@ class WindSensor(Node):
             return False
 
 
-    def parce_wind (self, data):
+    def parce_msg (self, data):
         speed_array = bytes([data[9],data[10],data[7],data[8]])
         try:
             derectionDegree = struct.unpack(">H", data[5:7])[0]
             speedMeterPerSecond = struct.unpack(">f", speed_array[0:4])[0]
             return (derectionDegree, speedMeterPerSecond)
         except:
-            print("Wind parce error")
+            print("Parce error")
             return (0.0, 0.0)
+
 
     def recieve_callback(self, msg):
         data = msg.data
 
         if self.check_crc(data) == False:
-            print("crc parse error")
+            print("Crc parse error")
             return
 
         if self.check_idx(data) == False:
             return
         
-        print(self.parce_wind(data))
+        print(self.parce_msg(data))
 
 
-    def get_rqst_wind_data_msg (self):
-        l = self.rqst_wind
+    def get_rqst_msg (self):
+        l = self.rqst_msg
         crc = libscrc.modbus(bytes(l[0:6]))
         crcLow = crc & 0xFF
         crcHigh = crc >> 8
@@ -85,7 +86,7 @@ class WindSensor(Node):
 
     def request_thread (self):
         while True:
-            request_message = self.get_rqst_wind_data_msg()
+            request_message = self.get_rqst_msg()
             self.send_message(request_message)
             time.sleep(1)
 
@@ -99,7 +100,7 @@ class WindSensor(Node):
             
             self.tx_.publish(msg)
         except Exception as e:
-            print("Error send message: {e}")
+            print("Error send message:", e)
 
 
 def main(args=None):

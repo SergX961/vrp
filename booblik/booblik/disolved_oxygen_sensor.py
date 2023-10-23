@@ -9,7 +9,7 @@ import struct
 
 class Sensor(Node):
     sensor_idx = 0x6
-    rqstHum = [sensor_idx, 0x03, 0x00, 0x00, 0x00, 0x06, 0xFF, 0xFF]
+    rqst_msg = [sensor_idx, 0x03, 0x00, 0x00, 0x00, 0x06, 0xFF, 0xFF]
 
 
     def __init__(self):
@@ -25,7 +25,6 @@ class Sensor(Node):
             self.recieve_callback,
             10
         )
-
         self.sendThread = Thread(
             target=self.request_thread, daemon=True).start()
 
@@ -43,6 +42,7 @@ class Sensor(Node):
         else:
             return False
 
+
     def check_idx (self, data):
         if data[0] == self.sensor_idx:
             return True
@@ -50,7 +50,7 @@ class Sensor(Node):
             return False
 
 
-    def parce (self, data):
+    def parce_msg (self, data):
         try:
             oxygen_saturation = struct.unpack(">f", data[3:7])[0]
             oxygen_concentration = struct.unpack(">f", data[7:11])[0]
@@ -59,6 +59,7 @@ class Sensor(Node):
         except:
             print("parce error")
             return (0.0, 0.0, 0.0)
+
 
     def recieve_callback(self, msg):
         data = msg.data
@@ -70,11 +71,11 @@ class Sensor(Node):
         if self.check_idx(data) == False:
             return
         
-        print(self.parce(data))
+        print(self.parce_msg(data))
 
 
-    def get_rqst_data_msg (self):
-        l = self.rqstHum
+    def get_rqst_msg (self):
+        l = self.rqst_msg
         crc = libscrc.modbus(bytes(l[0:6]))
         crcLow = crc & 0xFF
         crcHigh = crc >> 8
@@ -85,7 +86,7 @@ class Sensor(Node):
 
     def request_thread (self):
         while True:
-            request_message = self.get_rqst_data_msg()
+            request_message = self.get_rqst_msg()
             self.send_message(request_message)
             time.sleep(1)
 
@@ -99,7 +100,7 @@ class Sensor(Node):
             
             self.tx_.publish(msg)
         except Exception as e:
-            print("Error send message: {e}")
+            print("Error send message: ", e)
 
 
 def main(args=None):

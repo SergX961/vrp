@@ -9,7 +9,7 @@ import struct
 
 class PHTempSensor(Node):
     sensor_idx = 0x5
-    rqst = [sensor_idx, 0x03, 0x0, 0x0, 0x0, 0x2, 0xFF, 0xFF]
+    rqst_msg = [sensor_idx, 0x03, 0x0, 0x0, 0x0, 0x2, 0xFF, 0xFF]
 
 
     def __init__(self):
@@ -25,7 +25,6 @@ class PHTempSensor(Node):
             self.recieve_callback,
             10
         )
-
         self.sendThread = Thread(
             target=self.request_thread, daemon=True).start()
 
@@ -43,6 +42,7 @@ class PHTempSensor(Node):
         else:
             return False
 
+
     def check_idx (self, data):
         if data[0] == self.sensor_idx:
             return True
@@ -50,14 +50,13 @@ class PHTempSensor(Node):
             return False
 
 
-    def parce (self, data):
+    def parce_msg (self, data):
         try:
             calib = struct.unpack(">H", data[3:5])[0] / 10.0
             tds = struct.unpack(">H", data[5:7])[0] / 10.0
             return (calib, tds)
         except Exception as e:
-            print(e)
-            print("parce error")
+            print("parce error:", e)
             return (0.0, 0.0)
 
     def recieve_callback(self, msg):
@@ -70,11 +69,11 @@ class PHTempSensor(Node):
         if self.check_idx(data) == False:
             return
         
-        print(self.parce(data))
+        print(self.parce_msg(data))
 
 
-    def get_rqst_data_msg (self):
-        l = self.rqst
+    def get_rqst_msg (self):
+        l = self.rqst_msg
         crc = libscrc.modbus(bytes(l[0:(len(l) - 2)]))
         crcLow = crc & 0xFF
         crcHigh = crc >> 8
@@ -85,7 +84,7 @@ class PHTempSensor(Node):
 
     def request_thread (self):
         while True:
-            request_message = self.get_rqst_data_msg()
+            request_message = self.get_rqst_msg()
             # print(request_message)
             self.send_message(request_message)
             time.sleep(1)
@@ -100,7 +99,7 @@ class PHTempSensor(Node):
             
             self.tx_.publish(msg)
         except Exception as e:
-            print("Error send message: {e}")
+            print("Error send message: ", e)
 
 
 def main(args=None):
