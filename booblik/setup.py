@@ -27,6 +27,7 @@ setup(
                     'motors = booblik.motors:main',
                     'gpsimu = booblik.gpsimu:main',
                     'ping = booblik.ping:main',
+                    'ws_m181 = booblik.ws_m181:main',
                 ],
     },
 )

@@ -49,7 +49,7 @@ class GpsConfig:
 class GpsImuNode(Node):
     config: GpsConfig
 
-    def __init__(self, name='gpsimu'):
+    def __init__(self, name='ws_m181'):
         super().__init__(name)
         self.config = GpsConfig('/dev/ttyUSB0', 115200)
         self.nav_ = self.create_publisher(
