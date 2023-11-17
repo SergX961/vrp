@@ -28,6 +28,12 @@ setup(
                     'gpsimu = booblik.gpsimu:main',
                     'ping = booblik.ping:main',
                     'ws_m181 = booblik.ws_m181:main',
+                    'rs485node = booblik.rs485:main',
+                    'ht_sensor = booblik.ht_sensor:main',
+                    'wind_sensor = booblik.wind_sensor:main',
+                    'ec_tds_sensor = booblik.ec_tds_sensor:main',
+                    'ph_temp_sensor = booblik.ph_temp_sensor:main',
+                    'disolved_oxygen_sensor = booblik.disolved_oxygen_sensor:main',
                 ],
     },
 )
