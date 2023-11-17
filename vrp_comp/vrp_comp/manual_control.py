@@ -172,10 +172,10 @@ class ManualControl(Node):
             right.data = r * 20.0
             back = Float64()
             back.data = b * 20.0
-
-            self.right_.publish(right)
-            self.left_.publish(left)
-            self.back_.publish(back)
+            if (pygame.joystick.get_count() == 0):
+                self.right_.publish(right)
+                self.left_.publish(left)
+                self.back_.publish(back)
 
             pygame.display.update()
             clock.tick(FPS)
