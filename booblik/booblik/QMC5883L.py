@@ -4,7 +4,25 @@ from rclpy.node import Node
 import time
 import raspy_qmc5883l
 from sensor_msgs.msg import Imu
+import math
 
+def degrees_to_radians(degrees):
+    return degrees * math.pi / 180
+
+def euler_to_quaternion(yaw, pitch, roll):
+    cy = math.cos(yaw * 0.5)
+    sy = math.sin(yaw * 0.5)
+    cp = math.cos(pitch * 0.5)
+    sp = math.sin(pitch * 0.5)
+    cr = math.cos(roll * 0.5)
+    sr = math.sin(roll * 0.5)
+
+    qw = cy * cp * cr + sy * sp * sr
+    qx = cy * cp * sr - sy * sp * cr
+    qy = sy * cp * sr + cy * sp * cr
+    qz = sy * cp * cr - cy * sp * sr
+
+    return qw, qx, qy, qz
 
 class QMC5883LNode(Node):
     def __init__(self, name='QMC5883L'):
@@ -31,15 +49,23 @@ class QMC5883LNode(Node):
     def _readLoop(self):
         imu = Imu()
         while True:
+            time.sleep(0.1)
             try:
                 #TODO convert to quat?
                 bearing = self.sensor.get_bearing()
-                imu.header(bearing)
                 print(bearing)
+
+                qw, qx, qy, qz = euler_to_quaternion(degrees_to_radians(bearing), 0, 0)
+
+                imu = Imu()
+                imu.orientation.x = qx
+                imu.orientation.y = qy
+                imu.orientation.z = qz
+                imu.orientation.w = qw
                 self.imu_.publish(imu)
-                time.sleep(0.1)
             except:
                 print("Except: Reques error")
+
 
 def main(args=None):
     rclpy.init(args=args)
